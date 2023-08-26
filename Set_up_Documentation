@@ -1,0 +1,110 @@
+Infrastructure Setup Documentation
+
+This documentation provides step-by-step instructions to set up an AWS infrastructure using Terraform. The infrastructure includes various components that work together to create a functional environment. Here's a breakdown of the components and their interactions:
+
+Components:
+
+Amazon EKS Cluster:
+
+The EKS cluster is a managed Kubernetes cluster that orchestrates and manages containerized applications.
+It provides a platform for deploying, scaling, and managing containerized applications using Kubernetes.
+Interacts with the VPC, security groups, and subnets to establish network communication for pods and services.
+Virtual Private Cloud (VPC):
+
+The VPC is a logically isolated section of the AWS Cloud where you can launch AWS resources.
+It provides network isolation and segmentation for your resources.
+The EKS cluster, subnets, and security groups are all created within the VPC.
+Subnet:
+
+A subnet is a range of IP addresses in your VPC.
+The EKS cluster nodes, database instance, and other resources are launched within subnets.
+Different subnets can be created in different availability zones for high availability.
+MySQL Database Instance:
+
+The MySQL database instance provides a relational database management system.
+It stores data for applications and services.
+It communicates with the EKS cluster for application data storage and retrieval.
+Security Group:
+
+The security group acts as a virtual firewall for instances to control inbound and outbound traffic.
+It defines rules that control the incoming and outgoing traffic for resources.
+The EKS cluster security group allows specified traffic to and from the cluster.
+Docker Registry Image:
+
+The Docker registry image hosts container images that are used to deploy applications.
+It stores Docker images for applications to be deployed in the EKS cluster.
+The EKS cluster nodes pull images from the registry to run containers.
+Interactions:
+
+The EKS cluster is launched within the VPC and its worker nodes are deployed in subnets. The cluster uses the security group to control incoming and outgoing traffic.
+
+The MySQL database instance is launched within a subnet. It provides storage for application data and communicates with the EKS cluster over the VPC network.
+
+The Docker registry image holds container images that will be pulled by the EKS cluster nodes to deploy applications. The cluster's nodes retrieve images over the VPC network.
+
+The VPC provides the network environment for all resources, allowing them to communicate securely.
+
+The EKS cluster interacts with the VPC, subnets, security groups, and the database instance to establish networking and communication for applications.
+
+Steps to Reproduce:
+
+1. To reproduce on your local, here are the steps:
+
+Clone the Repository and navigate to the appropriate directory.
+
+Configure AWS Credentials by updating the variables.tf file with your AWS access key and secret key.
+
+Customize Variables in the variables.tf file based on your requirements.
+
+Initialize Terraform using the command terraform init.
+
+Create the Infrastructure using the command terraform apply. Confirm the plan by typing yes.
+
+The resources will be provisioned, and outputs will display important information like EKS cluster details, VPC ID, subnet ID, security group ID, and database endpoint.
+
+Access your resources using provided information:
+
+Configure kubectl with EKS cluster configuration.
+Access the MySQL database using its endpoint, username, and password.
+Pull Docker images from the Docker registry.
+To destroy the infrastructure, use the command terraform destroy and confirm the plan with yes.
+
+By following these steps, you can easily set up and manage your AWS infrastructure using Terraform, including an EKS cluster, VPC, database, and more. Always ensure that you follow best practices and consider security guidelines when working with cloud resources.
+
+2. Setting Up a Pipeline to Reproduce Infrastructure Using GitHub Actions
+
+Create Workflow YAML File:
+
+In your GitHub repository, create a .github/workflows directory (if not already present) and create a new YAML file, e.g., terraform_pipeline.yml, within this directory.
+
+Define Workflow:
+
+Define the GitHub Actions workflow in the YAML file. terraform.yaml
+In this example, the workflow is triggered on every push to the main branch. It sets up Terraform, initializes it, and applies changes automatically.
+
+Add Repository Secrets:
+
+Navigate to your GitHub repository's "Settings" > "Secrets" and add the necessary secrets like AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, and others required by your Terraform configuration.
+
+Commit and Push:
+
+Commit the workflow YAML file and any other necessary changes to your repository and push them to the main branch.
+
+Workflow Execution:
+
+With this configuration, every push to the main branch will trigger the GitHub Actions workflow. The workflow will check out the repository, set up Terraform with the provided secrets, initialize it, and then automatically apply any changes.
+
+Monitoring and Notifications:
+
+GitHub Actions provides detailed logs for each workflow run. You can monitor the progress and review logs in the "Actions" tab of your repository. Notifications can also be set up to alert you of workflow successes or failures.
+
+Destroying the Infrastructure:
+
+You might consider adding a step in your pipeline to allow for infrastructure destruction using terraform destroy. However, be cautious with this step, as automatically destroying resources can have unintended consequences.
+
+Remember to understand the implications of automatically applying infrastructure changes and use best practices for code versioning, secrets management, and security.
+
+By setting up this pipeline, you create a repeatable and automated process for deploying your infrastructure using Terraform, which can lead to more consistent and reliable deployments.
+
+
+Regenerate
